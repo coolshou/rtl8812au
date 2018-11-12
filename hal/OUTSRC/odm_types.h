@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *                                        
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -23,7 +23,7 @@
 //
 // Define Different SW team support
 //
-#define	ODM_AP		 	0x01	//BIT0 
+#define	ODM_AP		 	0x01	//BIT0
 #define	ODM_ADSL	 	0x02	//BIT1
 #define	ODM_CE		 	0x04	//BIT2
 #define	ODM_WIN		 	0x08	//BIT3
@@ -68,7 +68,7 @@ typedef enum _RT_SPINLOCK_TYPE{
 	RT_RM_SPINLOCK = 3,
 	RT_CAM_SPINLOCK = 4,
 	RT_SCAN_SPINLOCK = 5,
-	RT_LOG_SPINLOCK = 7, 
+	RT_LOG_SPINLOCK = 7,
 	RT_BW_SPINLOCK = 8,
 	RT_CHNLOP_SPINLOCK = 9,
 	RT_RF_OPERATE_SPINLOCK = 10,
@@ -79,7 +79,7 @@ typedef enum _RT_SPINLOCK_TYPE{
 	RT_USBRX_POSTPROC_SPINLOCK = 14, // protect data of Adapter->IndicateW/ IndicateR
 #endif
 	//Shall we define Ndis 6.2 SpinLock Here ?
-	RT_PORT_SPINLOCK=16,	
+	RT_PORT_SPINLOCK=16,
 	RT_H2C_SPINLOCK = 20, // For H2C cmd. Added by tynli. 2009.11.09.
 
 	RT_BTData_SPINLOCK=25,
@@ -87,7 +87,7 @@ typedef enum _RT_SPINLOCK_TYPE{
 	RT_WAPI_OPTION_SPINLOCK=26,
 	RT_WAPI_RX_SPINLOCK=27,
 
-      // add for 92D CCK control issue  
+      // add for 92D CCK control issue
 	RT_CCK_PAGEA_SPINLOCK = 28,
 	RT_BUFFER_SPINLOCK = 29,
 	RT_CHANNEL_AND_BANDWIDTH_SPINLOCK = 30,
@@ -106,8 +106,8 @@ typedef enum _RT_SPINLOCK_TYPE{
 	#define	PSTA_INFO_T			PRT_WLAN_STA
 
 //    typedef unsigned long		u4Byte,*pu4Byte;
-#define CONFIG_HW_ANTENNA_DIVERSITY 
-#define CONFIG_SW_ANTENNA_DIVERSITY 
+#define CONFIG_HW_ANTENNA_DIVERSITY
+#define CONFIG_SW_ANTENNA_DIVERSITY
 
 #elif (DM_ODM_SUPPORT_TYPE == ODM_AP)
 
@@ -133,14 +133,18 @@ typedef enum _RT_SPINLOCK_TYPE{
 
 	typedef struct rtl8192cd_priv	*prtl8192cd_priv;
 	typedef struct stat_info		STA_INFO_T,*PSTA_INFO_T;
+#if defined (LINUX_VERSION_CODE) && (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
+	typedef struct legacy_timer_emu		RT_TIMER, *PRT_TIMER;
+#else
 	typedef struct timer_list		RT_TIMER, *PRT_TIMER;
+#endif
 	typedef  void *				RT_TIMER_CALL_BACK;
 
 	#define DEV_BUS_TYPE		RT_PCI_INTERFACE
 
 	#define _TRUE				1
 	#define _FALSE				0
-	
+
 #elif (DM_ODM_SUPPORT_TYPE == ODM_ADSL)
 
 	// To let ADSL/AP project compile ok; it should be removed after all conflict are solved. Added by Annie, 2011-10-07.
@@ -160,9 +164,13 @@ typedef enum _RT_SPINLOCK_TYPE{
 
 	typedef struct rtl8192cd_priv	*prtl8192cd_priv;
 	typedef struct stat_info		STA_INFO_T,*PSTA_INFO_T;
+#if defined (LINUX_VERSION_CODE) && (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
+	typedef struct legacy_timer_emu		RT_TIMER, *PRT_TIMER;
+#else
 	typedef struct timer_list		RT_TIMER, *PRT_TIMER;
+#endif
 	typedef  void *				RT_TIMER_CALL_BACK;
-	
+
 	#define DEV_BUS_TYPE		RT_PCI_INTERFACE
 
 	#define _TRUE				1
@@ -182,29 +190,29 @@ typedef enum _RT_SPINLOCK_TYPE{
 	typedef s64					s8Byte,*ps8Byte;
 #else
 	#define u1Byte 		u8
-	#define	pu1Byte 	u8*	
+	#define	pu1Byte 	u8*
 
 	#define u2Byte 		u16
-	#define	pu2Byte 	u16*		
+	#define	pu2Byte 	u16*
 
 	#define u4Byte 		u32
-	#define	pu4Byte 	u32*	
+	#define	pu4Byte 	u32*
 
 	#define u8Byte 		u64
 	#define	pu8Byte 	u64*
 
 	#define s1Byte 		s8
-	#define	ps1Byte 	s8*	
+	#define	ps1Byte 	s8*
 
 	#define s2Byte 		s16
-	#define	ps2Byte 	s16*	
+	#define	ps2Byte 	s16*
 
 	#define s4Byte 		s32
-	#define	ps4Byte 	s32*	
+	#define	ps4Byte 	s32*
 
 	#define s8Byte 		s64
-	#define	ps8Byte 	s64*	
-	
+	#define	ps8Byte 	s64*
+
 #endif
 	#ifdef CONFIG_USB_HCI
 		#define DEV_BUS_TYPE  	RT_USB_INTERFACE
@@ -215,22 +223,26 @@ typedef enum _RT_SPINLOCK_TYPE{
 	#elif defined(CONFIG_GSPI_HCI)
 		#define DEV_BUS_TYPE  	RT_SDIO_INTERFACE
 	#endif
-	
 
-	#if defined(CONFIG_LITTLE_ENDIAN)	
+
+	#if defined(CONFIG_LITTLE_ENDIAN)
 		#define	ODM_ENDIAN_TYPE			ODM_ENDIAN_LITTLE
 	#elif defined (CONFIG_BIG_ENDIAN)
 		#define	ODM_ENDIAN_TYPE			ODM_ENDIAN_BIG
 	#endif
-	
+
+#if defined (LINUX_VERSION_CODE) && (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
+	typedef struct legacy_timer_emu		RT_TIMER, *PRT_TIMER;
+#else
 	typedef struct timer_list		RT_TIMER, *PRT_TIMER;
+#endif
 	typedef  void *				RT_TIMER_CALL_BACK;
 	#define	STA_INFO_T			struct sta_info
 	#define	PSTA_INFO_T		struct sta_info *
-		
 
 
-	#define TRUE 	_TRUE	
+
+	#define TRUE 	_TRUE
 	#define FALSE	_FALSE
 
 
