@@ -1112,7 +1112,7 @@ endif
 ARCH := arm64
 ifeq ($(RTK_ANDROID_VERSION), nougat)
 CROSS_COMPILE := /media/SOFT/sdb1/dev/pine64/android-7.1/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-
-KSRC :=/media/SOFT/sdb1/dev/pine64/android-7.1/linux/kernel-tulip
+KSRC :=/media/SOFT/sdb1/dev/pine64/android-7.1/linux/kernel-tulip/
 else
 # ===Cross compile setting for Android 5.1(64) SDK ===
 CROSS_COMPILE := /home/android_sdk/Allwinner/a64/android-51/lichee/out/sun50iw1p1/android/common/buildroot/external-toolchain/bin/aarch64-linux-gnu-
