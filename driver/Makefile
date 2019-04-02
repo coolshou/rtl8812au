@@ -159,8 +159,11 @@ CONFIG_PLATFORM_RTL8197D = n
 
 CONFIG_DRVEXT_MODULE = n
 
+ifeq ($(CONFIG_RTL8812AU), )
 export TopDIR ?= $(shell pwd)
-
+else
+export TopDIR ?= $(shell pwd)/drivers/net/wireless/rtl8812au
+endif
 ########### COMMON  #################################
 ifeq ($(CONFIG_GSPI_HCI), y)
 HCI_NAME = gspi
