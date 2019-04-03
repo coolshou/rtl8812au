@@ -23,6 +23,7 @@ endif
 EXTRA_CFLAGS += -Wno-vla
 
 EXTRA_CFLAGS += -I$(src)/include
+EXTRA_CFLAGS += -I$(src)/hal/phydm
 
 EXTRA_LDFLAGS += --strip-debug
 
@@ -159,11 +160,11 @@ CONFIG_PLATFORM_RTL8197D = n
 
 CONFIG_DRVEXT_MODULE = n
 
-ifeq ($(CONFIG_RTL8812AU), )
+#ifeq ($(CONFIG_RTL8812AU), )
 export TopDIR ?= $(shell pwd)
-else
-export TopDIR ?= $(shell pwd)/drivers/net/wireless/rtl8812au
-endif
+#else
+#export TopDIR ?= $(shell pwd)/drivers/net/wireless/rtl8812au
+#endif
 ########### COMMON  #################################
 ifeq ($(CONFIG_GSPI_HCI), y)
 HCI_NAME = gspi
@@ -225,6 +226,44 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/led/hal_$(HCI_NAME)_led.o
 
 
+_PHYDM_FILES := hal/phydm/phydm_debug.o	\
+		hal/phydm/phydm_antdiv.o\
+		hal/phydm/phydm_soml.o\
+		hal/phydm/phydm_smt_ant.o\
+		hal/phydm/phydm_antdect.o\
+		hal/phydm/phydm_interface.o\
+		hal/phydm/phydm_phystatus.o\
+		hal/phydm/phydm_hwconfig.o\
+		hal/phydm/phydm.o\
+		hal/phydm/phydm_dig.o\
+		hal/phydm/phydm_pathdiv.o\
+		hal/phydm/phydm_rainfo.o\
+		hal/phydm/phydm_dynamictxpower.o\
+		hal/phydm/phydm_adaptivity.o\
+		hal/phydm/phydm_cfotracking.o\
+		hal/phydm/phydm_noisemonitor.o\
+		hal/phydm/phydm_acs.o\
+		hal/phydm/phydm_beamforming.o\
+		hal/phydm/phydm_dfs.o\
+		hal/phydm/txbf/halcomtxbf.o\
+		hal/phydm/txbf/haltxbfinterface.o\
+		hal/phydm/txbf/phydm_hal_txbf_api.o\
+		hal/phydm/phydm_adc_sampling.o\
+		hal/phydm/phydm_ccx.o\
+		hal/phydm/phydm_psd.o\
+		hal/phydm/phydm_primary_cca.o\
+		hal/phydm/phydm_cck_pd.o\
+		hal/phydm/phydm_rssi_monitor.o\
+		hal/phydm/phydm_auto_dbg.o\
+		hal/phydm/phydm_math_lib.o\
+		hal/phydm/phydm_api.o\
+		hal/phydm/phydm_pow_train.o\
+		hal/phydm/halrf/halrf.o\
+		hal/phydm/halrf/halphyrf_ce.o\
+		hal/phydm/halrf/halrf_powertracking_ce.o\
+		hal/phydm/halrf/halrf_powertracking.o\
+		hal/phydm/halrf/halrf_kfree.o
+
 EXTRA_CFLAGS += -I$(src)/platform
 _PLATFORM_FILES := platform/platform_ops.o
 
@@ -250,7 +289,7 @@ _BTC_FILES += hal/btc/halbtc8192e1ant.o \
 				hal/btc/halbtc8821c2ant.o
 endif
 
-include $(TopDIR)/hal/phydm/phydm.mk
+#include $(TopDIR)/hal/phydm/phydm.mk
 ########### HAL_RTL8188E #################################
 ifeq ($(CONFIG_RTL8188E), y)
 
@@ -310,6 +349,14 @@ ifeq ($(CONFIG_SDIO_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8188E_SDIO.o
 endif
 
+
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8188e_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8188e_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8188e_rf.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8188e_ce.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8188e.o\
+		hal/phydm/$(RTL871X)/hal8188erateadaptive.o\
+		hal/phydm/$(RTL871X)/phydm_rtl8188e.o
 endif
 
 ########### HAL_RTL8192E #################################
@@ -365,6 +412,13 @@ ifeq ($(CONFIG_SDIO_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8192E_SDIO.o
 endif
 
+
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8192e_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8192e_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8192e_rf.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8192e_ce.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8192e.o\
+		hal/phydm/$(RTL871X)/phydm_rtl8192e.o
 endif
 
 ########### HAL_RTL8812A_RTL8821A #################################
@@ -431,7 +485,14 @@ endif
 
 ifeq ($(CONFIG_RTL8812A), y)
 EXTRA_CFLAGS += -DCONFIG_RTL8812A
-_HAL_INTFS_FILES +=	hal/rtl8812a/hal8812a_fw.o
+_HAL_INTFS_FILES += hal/rtl8812a/hal8812a_fw.o
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8812a_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8812a_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8812a_rf.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8812a_ce.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8812a.o\
+		hal/phydm/$(RTL871X)/phydm_rtl8812a.o\
+		hal/phydm/txbf/haltxbfjaguar.o
 endif
 
 ifeq ($(CONFIG_RTL8821A), y)
@@ -458,7 +519,15 @@ endif
 EXTRA_CFLAGS += -DCONFIG_RTL8821A
 
 _HAL_INTFS_FILES +=	hal/rtl8812a/hal8821a_fw.o
-
+_PHYDM_FILES += hal/phydm/rtl8821a/halhwimg8821a_mac.o\
+		hal/phydm/rtl8821a/halhwimg8821a_bb.o\
+		hal/phydm/rtl8821a/halhwimg8821a_rf.o\
+		hal/phydm/halrf/rtl8812a/halrf_8812a_ce.o\
+		hal/phydm/halrf/rtl8821a/halrf_8821a_ce.o\
+		hal/phydm/rtl8821a/phydm_regconfig8821a.o\
+		hal/phydm/rtl8821a/phydm_rtl8821a.o\
+		hal/phydm/halrf/rtl8821a/halrf_iqk_8821a_ce.o\
+		hal/phydm/txbf/haltxbfjaguar.o
 endif
 
 endif
@@ -513,6 +582,13 @@ ifeq ($(CONFIG_SDIO_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8723B_SDIO.o
 endif
 
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8723b_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8723b_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8723b_rf.o\
+		hal/phydm/$(RTL871X)/halhwimg8723b_mp.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8723b.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8723b_ce.o\
+		hal/phydm/$(RTL871X)/phydm_rtl8723b.o
 endif
 
 ########### HAL_RTL8814A #################################
@@ -571,6 +647,15 @@ ifeq ($(CONFIG_PCI_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8814A_PCIE.o
 endif
 
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8814a_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8814a_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8814a_rf.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_iqk_8814a.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8814a.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8814a_ce.o\
+		hal/phydm/$(RTL871X)/phydm_rtl8814a.o\
+		hal/phydm/txbf/haltxbf8814a.o
+
 endif
 
 ########### HAL_RTL8723C #################################
@@ -622,6 +707,12 @@ endif
 ifeq ($(CONFIG_PCI_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8703B_PCIE.o
 endif
+
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8703b_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8703b_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8703b_rf.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8703b.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8703b.o
 
 endif
 
@@ -677,6 +768,12 @@ ifeq ($(CONFIG_PCI_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8723D_PCIE.o
 endif
 
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8723d_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8723d_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8723d_rf.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8723d.o\
+		hal/phydm/$(RTL871X)/phydm_rtl8723d.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8723d.o
 endif
 
 ########### HAL_RTL8188F #################################
@@ -727,16 +824,44 @@ ifeq ($(CONFIG_SDIO_HCI), y)
 _HAL_INTFS_FILES +=hal/efuse/$(RTL871X)/HalEfuseMask8188F_SDIO.o
 endif
 
+_PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8188f_bb.o\
+		hal/phydm/$(RTL871X)/halhwimg8188f_mac.o\
+		hal/phydm/$(RTL871X)/halhwimg8188f_rf.o\
+		hal/phydm/$(RTL871X)/phydm_regconfig8188f.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8188f.o \
+		hal/phydm/$(RTL871X)/phydm_rtl8188f.o
+
 endif
 
 ########### HAL_RTL8822B #################################
 ifeq ($(CONFIG_RTL8822B), y)
-include $(TopDIR)/rtl8822b.mk
+#include $(TopDIR)/rtl8822b.mk
+
+RTL871X = rtl8822b
+_PHYDM_FILES +=	hal/phydm/$(RTL871X)/halhwimg8822b_bb.o \
+		hal/phydm/$(RTL871X)/halhwimg8822b_mac.o \
+		hal/phydm/$(RTL871X)/halhwimg8822b_rf.o \
+		hal/phydm/halrf/$(RTL871X)/halrf_8822b.o \
+		hal/phydm/$(RTL871X)/phydm_hal_api8822b.o \
+		hal/phydm/halrf/$(RTL871X)/halrf_iqk_8822b.o \
+		hal/phydm/$(RTL871X)/phydm_regconfig8822b.o \
+		hal/phydm/$(RTL871X)/phydm_rtl8822b.o
+
+_PHYDM_FILES +=	hal/phydm/txbf/haltxbf8822b.o
+
 endif
 
 ########### HAL_RTL8821C #################################
 ifeq ($(CONFIG_RTL8821C), y)
-include $(TopDIR)/rtl8821c.mk
+#include $(TopDIR)/rtl8821c.mk
+RTL871X = rtl8821c
+_PHYDM_FILES +=	hal/phydm/$(RTL871X)/halhwimg8821c_bb.o \
+		hal/phydm/$(RTL871X)/halhwimg8821c_mac.o \
+		hal/phydm/$(RTL871X)/halhwimg8821c_rf.o \
+		hal/phydm/$(RTL871X)/phydm_hal_api8821c.o \
+		hal/phydm/$(RTL871X)/phydm_regconfig8821c.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_8821c.o\
+		hal/phydm/halrf/$(RTL871X)/halrf_iqk_8821c.o
 endif
 
 ########### AUTO_CFG  #################################
@@ -1861,7 +1986,7 @@ export CONFIG_RTL8812AU = m
 all: modules
 
 modules:
-	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(shell pwd)  modules
+	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(TopDIR)  modules
 
 strip:
 	$(CROSS_COMPILE)strip $(MODULE_NAME).ko --strip-unneeded
