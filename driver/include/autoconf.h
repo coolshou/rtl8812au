@@ -316,7 +316,7 @@
 
 #define	RTL8188E_EARLY_MODE_PKT_NUM_10	0
 
-#define CONFIG_80211D
+/* #define CONFIG_80211D */
 
 #define CONFIG_ATTEMPT_TO_FIX_AP_BEACON_ERROR
 
@@ -325,7 +325,11 @@
 /*
  * Debug Related Config
  */
-#define DBG	1
+#ifdef CONFIG_DEBUG
+#define DBG	1	/* for ODM & BTCOEX debug */
+#else /* !CONFIG_DEBUG */
+#define DBG	0	/* for ODM & BTCOEX debug */
+#endif /* !CONFIG_DEBUG */
 
 #define CONFIG_PROC_DEBUG
 
