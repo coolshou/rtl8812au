@@ -18,7 +18,9 @@
 	#include <linux/fs.h>
 #endif
 #include <drv_types.h>
-
+#ifdef CONFIG_ARCH_SUNXI
+#include <linux/sunxi-sid.h>
+#endif
 
 u8 RTW_WPA_OUI_TYPE[] = { 0x00, 0x50, 0xf2, 1 };
 u16 RTW_WPA_VERSION = 1;
@@ -1409,20 +1411,29 @@ void rtw_macaddr_cfg(u8 *out, const u8 *hw_mac_addr)
 
 err_chk:
 	if (rtw_check_invalid_mac_address(mac, _TRUE) == _TRUE) {
+		RTW_ERR("invalid mac addr:"MAC_FMT, MAC_ARG(mac));
 #if DEFAULT_RANDOM_MACADDR
-		RTW_ERR("invalid mac addr:"MAC_FMT", assign random MAC\n", MAC_ARG(mac));
+		RTW_ERR(", assign random MAC\n");
 		*((u32 *)(&mac[2])) = rtw_random32();
 		mac[0] = 0x00;
 		mac[1] = 0xe0;
 		mac[2] = 0x4c;
 #else
-		RTW_ERR("invalid mac addr:"MAC_FMT", assign default one\n", MAC_ARG(mac));
+#ifdef __SUNXI_MACH_SUNXI_CHIP_H
+		RTW_ERR(", assign chipid MAC\n");
+		sunxi_get_chipid_mac_addr(mac);
+		mac[0] = 0x00;
+		mac[1] = 0xe0;
+		mac[2] = 0x4c;
+#else
+		RTW_ERR(", assign default one\n");
 		mac[0] = 0x00;
 		mac[1] = 0xe0;
 		mac[2] = 0x4c;
 		mac[3] = 0x87;
 		mac[4] = 0x00;
 		mac[5] = 0x00;
+#endif
 #endif
 	}
 
