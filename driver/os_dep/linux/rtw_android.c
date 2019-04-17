@@ -1029,7 +1029,12 @@ void *wifi_get_country_code(char *ccode)
 	if (!ccode)
 		return NULL;
 	if (wifi_control_data && wifi_control_data->get_country_code)
+	#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 14, 0))
 		return wifi_control_data->get_country_code(ccode);
+	#else
+		u32 flags = 0; // TODO: what does flags use for?
+		return wifi_control_data->get_country_code(ccode, flags);
+	#endif
 	return NULL;
 }
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39)) */
