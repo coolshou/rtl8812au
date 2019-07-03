@@ -1,4 +1,4 @@
-rtl8812au (5.2.20.2.28373-20190605) unstable; urgency=medium
+rtl8812au (5.2.20.2.28373-20190703) unstable; urgency=medium
 
   * Fix compilation for Linux 5.1,replace get_ds() with KERNEL_DS 
 
